@@ -1,8 +1,12 @@
 <?php
 $host = 'localhost';
-$user = 'root';
-$password = 'root';
+$dbuser = 'root';
+$dbpwd = 'root';
 $db = 'accounts';
 
-$conn = new mysqli($host, $user, $password, $db);
+$conn = new mysqli($host, $dbuser, $dbpwd, $db);
+
+if($conn->connect_error) {
+    die('Connection failed! ' . $conn->connect_error);
+}
 ?>
