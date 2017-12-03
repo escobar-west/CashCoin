@@ -2,26 +2,25 @@
 session_start();
 $title = 'Account';
 
-if(!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username'])) {
     header('Location: index.php');
 }
-
 $username = $_SESSION['username'];
 
 include 'connect.php';
-
 $sql_query = "SELECT username, eth FROM balances WHERE username = '$username'";
-
 $result = $conn->query($sql_query);
 
-if(!$result) {
-    die('query failed');
-}
-
-if($result->num_rows == 1) {
-    $eth_balance = $result->fetch_assoc()['eth'];
+if ($result) {
+    if($result->num_rows == 1) {
+        $eth_balance = $result->fetch_assoc()['eth'];
+        $ltc_balance = $result->fetch_assoc()['ltc'];
+        $btc_balance = $result->fetch_assoc()['btc'];
+    } else {
+        $err_di['Query error'] = 'Could not find user';
+    }
 } else {
-    die('Could not find user!' . $sql_query);
+    $err_di['Query error'] = 'Query failed';
 }
 $conn->close();
 include 'header.php';
@@ -29,14 +28,16 @@ include 'header.php';
 <body>
 <div class="container">
   <header>
-    <h1>Welcome, <?php echo $username;?></h1>
+    <?php
+    require 'navbar.php';
+    ?>
   </header>
   <hr>
     <div class="jumbotron text-center">
       <h2>Account</h2>
       <br>
-      <p>Your account balance is <?php echo $eth_balance;?><p>
-      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#sendModal">Send</button>
+      <p>Points: <?php echo $eth_balance;?><p>
+      <a href='send.php'><button type="button" class="btn btn-info">Send</button></a>
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#transferModal">Transfer</button>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#redeemModal">Redeem</button>
     </div>
