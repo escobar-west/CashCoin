@@ -22,13 +22,11 @@ if($result->num_rows == 1) {
 
 	$api_key = "EaTfh0IH4ATDXnDd";
 	$api_secret = "4jbVFe95k4i2bGYLLZNofsyTlUQAQH8M";
-	$api_url = 'https://api.coinbase.com/v2/';
 	$configuration = Configuration::apiKey($api_key, $api_secret);
 	$client = Client::create($configuration);
 		
     $coupon_value = $result->fetch_assoc()['value'];
-    print_r($client->getBuyPrice('BTC'));
-    $eth_amt = $coupon_value;// / float($client->getBuyPrice('ETH');
+    $eth_amt = $coupon_value / $client->getBuyPrice('ETH')->getAmount();
 
     $sql_query = "UPDATE balances SET eth = eth + $eth_amt WHERE username = '$username'";
     if($conn->query($sql_query) === TRUE) {
