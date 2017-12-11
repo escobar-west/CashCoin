@@ -30,6 +30,8 @@ if($result->num_rows == 1) {
 
     $sql_query = "UPDATE balances SET eth = eth + $eth_amt WHERE username = '$username'";
     if($conn->query($sql_query) === TRUE) {
+        $sql_query = "DELETE FROM coupons WHERE secret = '$secret'";
+        $conn->query($sql_query);
         echo "Record updated";
     } else {
         echo "Error updating record: " . $conn->error;
