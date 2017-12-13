@@ -27,21 +27,25 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         die('query failed');
     }
     $balance = $result->fetch_assoc()[$currency];
-    if ($amt > $balance) {
+        
+	date_default_timezone_set('America/New_York');
+
+	$api_key = "EaTfh0IH4ATDXnDd";
+	$api_secret = "4jbVFe95k4i2bGYLLZNofsyTlUQAQH8M";
+	$api_url = 'https://api.coinbase.com/v2/';
+
+	$configuration = Configuration::apiKey($api_key, $api_secret);
+	$client = Client::create($configuration);
+    $coinbase_time = $client->getTime(); //TODO: remove this variable completely from code
+
+    $eth_price = $client->getBuyPrice('ETH')->getAmount();
+
+    if ($amt > $balance * $eth_price) {
         die('User error: Amount is greater than balance<br><a href=send.php>Return</a>');
     } else {
         echo "<br>the amount requested is: " . $amt;
         echo "<br>the balance is: " . $balance;
-        
-		date_default_timezone_set('America/New_York');
 
-		$api_key = "EaTfh0IH4ATDXnDd";
-		$api_secret = "4jbVFe95k4i2bGYLLZNofsyTlUQAQH8M";
-		$api_url = 'https://api.coinbase.com/v2/';
-
-		$configuration = Configuration::apiKey($api_key, $api_secret);
-		$client = Client::create($configuration);
-        $coinbase_time = $client->getTime();
         print_r($coinbase_time);
         echo '<br>Server time: ' . date("h:i:sa") . '<br>Coinbase time: ' . $coinbase_time;
 		$account_id = '24a83a4a-8446-577a-ab2e-226baca74775';

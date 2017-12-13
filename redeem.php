@@ -20,7 +20,7 @@ if(!$result) {
 if($result->num_rows == 1) {
     date_default_timezone_set('America/New_York');
 
-	$api_key = "EaTfh0IH4ATDXnDd";
+	$api_key = "EaTfh0IH4ATDXnDd"; //TODO: REVIEW THIS SECURITY FLAW
 	$api_secret = "4jbVFe95k4i2bGYLLZNofsyTlUQAQH8M";
 	$configuration = Configuration::apiKey($api_key, $api_secret);
 	$client = Client::create($configuration);
